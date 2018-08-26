@@ -19,13 +19,17 @@ Vagrant.configure("2") do |config|
     # configure default vm
     config.vm.define 'default' do |node|
        node.vm.hostname = 'parse-dev-hostname'
-       node.vm.network :private_network, ip: '192.168.33.11'
+       node.vm.network :public_network, ip: '192.168.0.0'
        node.hostmanager.aliases = %w(dash.parse.dev api.parse.dev)
     end
     # Parse API port
-    #config.vm.network "forwarded_port", guest: 1337, host: 1337
+    config.vm.network "forwarded_port", guest: 1337, host: 1337
     # Parse Dashboard port
-    #config.vm.network "forwarded_port", guest: 4040, host: 4040
+    config.vm.network "forwarded_port", guest: 4040, host: 4040
+    config.vm.network "forwarded_port", guest: 80, host: 80
+    config.vm.network "forwarded_port", guest: 27017, host: 27017
+    config.vm.network "forwarded_port", guest: 9200, host: 9200
+    config.vm.network "forwarded_port", guest: 5601, host:5601
 
     config.vm.provider "virtualbox" do |v|
       v.memory = 2048
@@ -49,7 +53,7 @@ Vagrant.configure("2") do |config|
     # $ vagrant plugin install vagrant-docker-compose
     # HTTPS works only for production and valid domain name (see let's encrypt for more informations)
     config.vm.provision :docker_compose,
-        rebuild: true,
+        rebuild: false,
         run: "always",
         yml: "/vagrant/docker-compose-le.yml",
         env: {
