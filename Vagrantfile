@@ -53,6 +53,7 @@ Vagrant.configure("2") do |config|
     # $ vagrant plugin install vagrant-docker-compose
     # HTTPS works only for production and valid domain name (see let's encrypt for more informations)
     config.vm.provision :docker_compose,
+        #True= Delete all docker containers, false = Keep Containers
         rebuild: false,
         run: "always",
         yml: "/vagrant/docker-compose-le.yml",
